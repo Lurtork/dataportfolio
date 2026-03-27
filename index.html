@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — Data Scientist & Analyst</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── DESIGN TOKENS ─────────────────────────────────────── */
+    :root {
+      --bg:          #0b0f1a;
+      --bg-card:     #111827;
+      --bg-glass:    rgba(17, 24, 39, 0.72);
+      --border:      rgba(255,255,255,0.07);
+      --accent:      #f5a623;
+      --accent-dim:  rgba(245, 166, 35, 0.15);
+      --accent2:     #38bdf8;
+      --text:        #e8eaf0;
+      --text-muted:  #6b7694;
+      --text-dim:    #3a4060;
+      --font-serif:  'DM Serif Display', Georgia, serif;
+      --font-mono:   'DM Mono', 'Courier New', monospace;
+      --font-body:   'DM Sans', system-ui, sans-serif;
+      --radius:      16px;
+      --slide-gap:   28px;
+    }
+
+    /* ─── RESET ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.65;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ─── NOISE OVERLAY ──────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+    }
+
+    /* ─── NAVIGATION ─────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 60px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      background: rgba(11, 15, 26, 0.8);
+    }
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ─── HERO / ABOUT ───────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 140px 60px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background grid lines */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* Glow orbs */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-orb-1 {
+      width: 600px; height: 600px;
+      background: rgba(245, 166, 35, 0.07);
+      top: -100px; right: -100px;
+    }
+    .glow-orb-2 {
+      width: 400px; height: 400px;
+      background: rgba(56, 189, 248, 0.05);
+      bottom: 0; left: 10%;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 80px;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Profile picture */
+    .profile-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .profile-ring {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      padding: 3px;
+      background: conic-gradient(from 0deg, var(--accent), var(--accent2), var(--accent));
+      animation: spin-ring 8s linear infinite;
+    }
+    @keyframes spin-ring {
+      to { transform: rotate(360deg); }
+    }
+    .profile-pic {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      background: var(--bg-card);
+      /* Placeholder gradient shown when no image loaded */
+      background-image: linear-gradient(135deg, #1e2a40 0%, #0f172a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Placeholder icon shown when profile.jpg is missing */
+    .profile-pic-placeholder {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a2235 0%, #111827 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .profile-pic-placeholder svg {
+      opacity: 0.3;
+    }
+    .profile-pic-placeholder span {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    .profile-badge {
+      position: absolute;
+      bottom: 8px;
+      right: -8px;
+      background: var(--accent);
+      color: #000;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    /* Hero text */
+    .hero-text {}
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-tag::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(42px, 5vw, 72px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 28px;
+      color: #fff;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-bio {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.8;
+      margin-bottom: 36px;
+    }
+
+    /* Stats row */
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      color: #fff;
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* CTA buttons */
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Skills pills */
+    .skills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 28px;
+    }
+    .skill-pill {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 400;
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      background: var(--accent-dim);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .skill-pill:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ─── SECTION DIVIDER ────────────────────────────────────── */
+    .section-head {
+      padding: 80px 60px 40px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 3vw, 42px);
+      font-weight: 400;
+      color: #fff;
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── PROJECTS CAROUSEL ──────────────────────────────────── */
+    /*
+      HOW TO ADD MORE PROJECTS:
+      Simply duplicate any <div class="slide"> ... </div> block
+      inside <div class="slides-track"> and update:
+        - data-category="…"   ← tag shown in top-right corner
+        - The <img> src="img/your-image.jpg"
+        - The <h3> title
+        - The <p> description
+        - The <span> tech tags inside .slide-tags
+      Images should be placed in the /img folder.
+    */
+
+    .carousel-section {
+      position: relative;
+      padding-bottom: 80px;
+    }
+
+    .carousel-viewport {
+      overflow: hidden;
+      width: 100%;
+      cursor: grab;
+      user-select: none;
+      position: relative;
+    }
+    .carousel-viewport:active { cursor: grabbing; }
+
+    .slides-track {
+      display: flex;
+      gap: var(--slide-gap);
+      padding: 12px 60px 40px;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
+    }
+
+    /* ── SLIDE CARD ── */
+    .slide {
+      flex: 0 0 calc(33.333% - var(--slide-gap));
+      min-width: 340px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s, transform 0.3s;
+      position: relative;
+    }
+    .slide:hover {
+      border-color: rgba(245, 166, 35, 0.35);
+      transform: translateY(-4px);
+    }
+
+    .slide-img-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      position: relative;
+      background: #0d1424;
+    }
+    .slide-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .slide:hover .slide-img-wrap img { transform: scale(1.04); }
+
+    /* Placeholder for missing images */
+    .slide-img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #0d1424 0%, #111827 100%);
+    }
+    .slide-img-placeholder .chart-icon {
+      opacity: 0.2;
+    }
+    .slide-img-placeholder span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    .slide-category {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(11, 15, 26, 0.85);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .slide-body {
+      padding: 24px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+    .slide-body h3 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .slide-body p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      flex: 1;
+    }
+    .slide-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .slide-tags span {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.08em;
+      padding: 3px 9px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .slide-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: gap 0.2s;
+    }
+    .slide-link:hover { gap: 10px; }
+
+    /* ── CAROUSEL CONTROLS ── */
+    .carousel-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 0 60px;
+    }
+    .carousel-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .carousel-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .carousel-dots {
+      display: flex;
+      gap: 8px;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 0;
+    }
+    .dot.active {
+      background: var(--accent);
+      width: 22px;
+      border-radius: 3px;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 40px;
+    }
+    footer p {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+    .footer-links {
+      display: flex;
+      gap: 28px;
+    }
+    .footer-links a {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ─── FADE-IN ANIMATION ──────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeInUp 0.7s ease forwards;
+    }
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.22s; }
+    .delay-3 { animation-delay: 0.34s; }
+    .delay-4 { animation-delay: 0.48s; }
+    .delay-5 { animation-delay: 0.62s; }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 18px 28px; }
+      .hero { padding: 120px 28px 80px; }
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        text-align: center;
+      }
+      .profile-wrap { margin: 0 auto; }
+      .hero-tag { justify-content: center; }
+      .hero-bio { margin: 0 auto 36px; }
+      .hero-stats { justify-content: center; }
+      .hero-cta { justify-content: center; }
+      .skills-row { justify-content: center; }
+      .section-head { padding: 60px 28px 32px; }
+      .slides-track { padding: 12px 28px 32px; }
+      .carousel-controls { padding: 0 28px; }
+      footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 28px; }
+      .slide { min-width: 300px; flex: 0 0 85vw; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVIGATION ───────────────────────────────────────────── -->
+  <nav>
+    <div class="nav-logo">// portfolio</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="mailto:you@email.com">Contact</a></li>
+      <li><a href="resume.pdf" target="_blank">Résumé ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO / ABOUT ─────────────────────────────────────────── -->
+  <section class="hero" id="about">
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+
+    <div class="hero-inner">
+
+      <!-- Profile Picture -->
+      <div class="profile-wrap fade-in">
+        <div class="profile-ring">
+          <!--
+            Replace the placeholder below with:
+            <img class="profile-pic" src="img/profile.jpg" alt="Your Name" />
+          -->
+          <div class="profile-pic profile-pic-placeholder">
+            <svg class="chart-icon" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="28" cy="28" r="27" stroke="#f5a623" stroke-width="1.5"/>
+              <rect x="14" y="32" width="6" height="10" rx="1" fill="#f5a623"/>
+              <rect x="25" y="24" width="6" height="18" rx="1" fill="#38bdf8"/>
+              <rect x="36" y="18" width="6" height="24" rx="1" fill="#f5a623" opacity=".6"/>
+              <path d="M14 28 L22 20 L32 25 L42 14" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span><img class="profile-pic" src="img/profile.jpg" alt="Francisco Lopez" /></span>
+          </div>
+        </div>
+        <div class="profile-badge">Open to work ✦</div>
+      </div>
+
+      <!-- Hero Text -->
+      <div class="hero-text">
+        <div class="hero-tag fade-in delay-1">Data Scientist & Analyst</div>
+
+        <!--
+          ✏️ EDIT: Replace "Your Name" below with your actual name.
+          The <em> tag makes the word italic & gold — use it for emphasis.
+        -->
+        <h1 class="fade-in delay-2">
+          Hi, I'm <em>Francisco Lopez.</em><br>
+          I turn raw data<br>into clear stories.
+        </h1>
+
+        <!--
+          ✏️ EDIT: Write a short bio (2–4 sentences).
+        -->
+        <p class="hero-bio fade-in delay-3">
+          Data scientist with a passion for transforming complex datasets into
+          actionable insights. I work at the intersection of statistics,
+          machine learning, and storytelling — helping teams make
+          evidence-based decisions.
+        </p>
+
+        <!-- Stats — ✏️ EDIT these numbers -->
+        <div class="hero-stats fade-in delay-3">
+          <div class="stat">
+            <span class="stat-num">4+</span>
+            <span class="stat-label">Projects</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">3</span>
+            <span class="stat-label">Years exp.</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">8</span>
+            <span class="stat-label">Tools</span>
+          </div>
+        </div>
+
+        <div class="hero-cta fade-in delay-4">
+          <a class="btn btn-primary" href="#projects">View Projects</a>
+          <a class="btn btn-ghost" href="mailto:bronzezoombus@gmail.com">Get in Touch</a>
+        </div>
+
+        <!-- ✏️ EDIT: Add/remove your skill tags -->
+        <div class="skills-row fade-in delay-5">
+          <span class="skill-pill">Python</span>
+          <span class="skill-pill">R</span>
+          <span class="skill-pill">SQL</span>
+          <span class="skill-pill">Tableau</span>
+          <span class="skill-pill">Power BI</span>
+          <span class="skill-pill">scikit-learn</span>
+          <span class="skill-pill">TensorFlow</span>
+          <span class="skill-pill">dbt</span>
+          <span class="skill-pill">Spark</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJECTS CAROUSEL ─────────────────────────────────────── -->
+  <section class="carousel-section" id="projects">
+
+    <div class="section-head">
+      <span class="section-label">01 — Work</span>
+      <h2 class="section-title">Featured Projects</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="carousel-viewport" id="carouselViewport">
+      <div class="slides-track" id="slidesTrack">
+
+        <!--
+        ════════════════════════════════════════════════════
+          HOW TO ADD A NEW PROJECT SLIDE
+          ────────────────────────────────────────────────
+          1. Copy the entire block below (from <!-- SLIDE START to SLIDE END)
+          2. Paste it after the last </div><!-- SLIDE END block
+          3. Update:
+             • data-category="…"         → e.g. "Machine Learning"
+             • <img src="img/..."        → your image filename in /img/
+             • <h3> …                    → project title
+             • <p> …                     → short description
+             • <span> tags in .slide-tags → tools used
+             • href on .slide-link       → link to GitHub / live demo
+        ════════════════════════════════════════════════════
+        -->
+
+        <!-- SLIDE START -->
+        <div class="slide">
+          <div class="slide-img-wrap">
+            <!--
+              Replace src below with your image, e.g.:
+              <img src="img/project1.png" alt="Project 1" />
+            -->
+            <div class="slide-img-placeholder">
+              <svg class="chart-icon" width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="6" y="28" width="8" height="14" rx="2" fill="#f5a623" opacity=".4"/><rect x="20" y="18" width="8" height="24" rx="2" fill="#38bdf8" opacity=".4"/><rect x="34" y="10" width="8" height="32" rx="2" fill="#f5a623" opacity=".4"/><path d="M6 26 L20 16 L32 22 L42 8" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>img/project1.png</span>
+            </div>
+            <div class="slide-category" data-category="EDA">Exploratory Analysis</div>
+          </div>
+          <div class="slide-body">
+            <h3>Sales Performance Dashboard</h3>
+            <p>End-to-end analysis of 3-year sales data across 12 regions. Built interactive Tableau dashboards revealing $2M in hidden revenue opportunities.</p>
+            <div class="slide-tags">
+              <span>Python</span>
+              <span>Pandas</span>
+              <span>Tableau</span>
+              <span>SQL</span>
+            </div>
+            <a class="slide-link" href="#" target="_blank">View on GitHub →</a>
+          </div>
+        </div>
+        <!-- SLIDE END -->
+
+        <!-- SLIDE START -->
+        <div class="slide">
+          <div class="slide-img-wrap">
+            <div class="slide-img-placeholder">
+              <svg class="chart-icon" width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="16" stroke="#f5a623" stroke-width="1.5" opacity=".4"/><circle cx="24" cy="24" r="10" stroke="#38bdf8" stroke-width="1.5" opacity=".4"/><circle cx="24" cy="24" r="4" fill="#f5a623" opacity=".5"/><line x1="24" y1="8" x2="24" y2="14" stroke="#38bdf8" stroke-width="1.5"/><line x1="24" y1="34" x2="24" y2="40" stroke="#38bdf8" stroke-width="1.5"/><line x1="8" y1="24" x2="14" y2="24" stroke="#38bdf8" stroke-width="1.5"/><line x1="34" y1="24" x2="40" y2="24" stroke="#38bdf8" stroke-width="1.5"/></svg>
+              <span>img/project2.png</span>
+            </div>
+            <div class="slide-category" data-category="ML">Machine Learning</div>
+          </div>
+          <div class="slide-body">
+            <h3>Customer Churn Prediction</h3>
+            <p>Gradient boosting classifier to predict churn 30 days in advance. Achieved 91% AUC-ROC, deployed via Flask API to production CRM.</p>
+            <div class="slide-tags">
+              <span>XGBoost</span>
+              <span>scikit-learn</span>
+              <span>Flask</span>
+              <span>SHAP</span>
+            </div>
+            <a class="slide-link" href="#" target="_blank">View on GitHub →</a>
+          </div>
+        </div>
+        <!-- SLIDE END -->
+
+        <!-- SLIDE START -->
+        <div class="slide">
+          <div class="slide-img-wrap">
+            <div class="slide-img-placeholder">
+              <svg class="chart-icon" width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="6" y="6" width="15" height="15" rx="2" fill="#38bdf8" opacity=".3"/><rect x="27" y="6" width="15" height="15" rx="2" fill="#f5a623" opacity=".3"/><rect x="6" y="27" width="15" height="15" rx="2" fill="#f5a623" opacity=".3"/><rect x="27" y="27" width="15" height="15" rx="2" fill="#38bdf8" opacity=".3"/><line x1="6" y1="24" x2="42" y2="24" stroke="white" stroke-width=".8" opacity=".15"/><line x1="24" y1="6" x2="24" y2="42" stroke="white" stroke-width=".8" opacity=".15"/></svg>
+              <span>img/project3.png</span>
+            </div>
+            <div class="slide-category" data-category="NLP">NLP</div>
+          </div>
+          <div class="slide-body">
+            <h3>Sentiment Analysis Pipeline</h3>
+            <p>Real-time tweet sentiment classifier using fine-tuned BERT. Processed 500K tweets/day to track brand perception across social media.</p>
+            <div class="slide-tags">
+              <span>BERT</span>
+              <span>HuggingFace</span>
+              <span>Kafka</span>
+              <span>Spark</span>
+            </div>
+            <a class="slide-link" href="#" target="_blank">View on GitHub →</a>
+          </div>
+        </div>
+        <!-- SLIDE END -->
+
+        <!-- SLIDE START -->
+        <div class="slide">
+          <div class="slide-img-wrap">
+            <div class="slide-img-placeholder">
+              <svg class="chart-icon" width="48" height="48" viewBox="0 0 48 48" fill="none"><polyline points="6,36 16,20 24,28 32,12 42,20" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/><polyline points="6,38 42,38" stroke="white" stroke-width=".8" opacity=".2"/><circle cx="16" cy="20" r="3" fill="#f5a623" opacity=".7"/><circle cx="32" cy="12" r="3" fill="#f5a623" opacity=".7"/></svg>
+              <span>img/project4.png</span>
+            </div>
+            <div class="slide-category" data-category="Time Series">Forecasting</div>
+          </div>
+          <div class="slide-body">
+            <h3>Demand Forecasting Model</h3>
+            <p>ARIMA + Prophet hybrid model for retail demand forecasting. Reduced inventory waste by 18% over a 6-month period in production.</p>
+            <div class="slide-tags">
+              <span>Prophet</span>
+              <span>ARIMA</span>
+              <span>R</span>
+              <span>Power BI</span>
+            </div>
+            <a class="slide-link" href="#" target="_blank">View on GitHub →</a>
+          </div>
+        </div>
+        <!-- SLIDE END -->
+
+        <!-- SLIDE START — duplicate this block to add more! -->
+        <div class="slide">
+          <div class="slide-img-wrap">
+            <div class="slide-img-placeholder">
+              <svg class="chart-icon" width="48" height="48" viewBox="0 0 48 48" fill="none"><ellipse cx="24" cy="24" rx="16" ry="8" stroke="#f5a623" stroke-width="1.5" opacity=".4"/><ellipse cx="24" cy="24" rx="8" ry="16" stroke="#38bdf8" stroke-width="1.5" opacity=".4"/><circle cx="24" cy="24" r="3" fill="#f5a623" opacity=".6"/></svg>
+              <span>img/project5.png</span>
+            </div>
+            <div class="slide-category" data-category="Geo">Geospatial</div>
+          </div>
+          <div class="slide-body">
+            <h3>Urban Mobility Analysis</h3>
+            <p>Geospatial clustering of mobility patterns in CDMX using GPS traces. Visualized commute hotspots informing public transit planning.</p>
+            <div class="slide-tags">
+              <span>GeoPandas</span>
+              <span>Folium</span>
+              <span>DBSCAN</span>
+              <span>PostGIS</span>
+            </div>
+            <a class="slide-link" href="#" target="_blank">View on GitHub →</a>
+          </div>
+        </div>
+        <!-- SLIDE END -->
+
+      </div><!-- /slides-track -->
+    </div><!-- /carousel-viewport -->
+
+    <!-- Controls -->
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="btnPrev" aria-label="Previous">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-btn" id="btnNext" aria-label="Next">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ── FOOTER ───────────────────────────────────────────────── -->
+  <footer>
+    <p>© 2025 Francisco Lopez — Built with ♥ and data.</p>
+    <div class="footer-links">
+      <a href="https://github.com/Lurtork" target="_blank">GitHub ↗</a>
+      <a href="https://linkedin.com/in/yourusername" target="_blank">LinkedIn ↗</a>
+      <a href="mailto:you@email.com">Email</a>
+    </div>
+  </footer>
+
+  <!-- ── CAROUSEL SCRIPT ──────────────────────────────────────── -->
+  <script>
+    (() => {
+      const track       = document.getElementById('slidesTrack');
+      const viewport    = document.getElementById('carouselViewport');
+      const dotsWrap    = document.getElementById('carouselDots');
+      const btnNext     = document.getElementById('btnNext');
+      const btnPrev     = document.getElementById('btnPrev');
+      const slides      = Array.from(track.querySelectorAll('.slide'));
+
+      let currentIndex  = 0;
+      let isDragging    = false;
+      let startX        = 0;
+      let startTranslate = 0;
+      let currentTranslate = 0;
+
+      // How many slides visible at once
+      function visibleCount() {
+        return window.innerWidth < 700 ? 1 : window.innerWidth < 1100 ? 2 : 3;
+      }
+
+      const totalPages = () => Math.max(1, slides.length - visibleCount() + 1);
+
+      // Build dots
+      function buildDots() {
+        dotsWrap.innerHTML = '';
+        for (let i = 0; i < totalPages(); i++) {
+          const d = document.createElement('button');
+          d.className = 'dot' + (i === currentIndex ? ' active' : '');
+          d.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          d.addEventListener('click', () => goTo(i));
+          dotsWrap.appendChild(d);
+        }
+      }
+
+      function updateDots() {
+        dotsWrap.querySelectorAll('.dot').forEach((d, i) => {
+          d.classList.toggle('active', i === currentIndex);
+        });
+      }
+
+      function getSlideWidth() {
+        if (!slides[0]) return 0;
+        const style = getComputedStyle(track);
+        const gap   = parseFloat(style.gap) || 28;
+        return slides[0].offsetWidth + gap;
+      }
+
+      function setTranslate(x) {
+        track.style.transform = `translateX(${x}px)`;
+        currentTranslate = x;
+      }
+
+      function goTo(index) {
+        const max = totalPages() - 1;
+        currentIndex = Math.min(Math.max(index, 0), max);
+        const offset = -currentIndex * getSlideWidth();
+        track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        setTranslate(offset);
+        updateDots();
+      }
+
+      btnNext.addEventListener('click', () => goTo(currentIndex + 1));
+      btnPrev.addEventListener('click', () => goTo(currentIndex - 1));
+
+      // Drag / swipe support
+      function onPointerDown(e) {
+        isDragging   = true;
+        startX       = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        startTranslate = currentTranslate;
+        track.style.transition = 'none';
+      }
+      function onPointerMove(e) {
+        if (!isDragging) return;
+        const x    = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        const diff = x - startX;
+        setTranslate(startTranslate + diff);
+      }
+      function onPointerUp(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        const x    = e.type === 'touchend' ? e.changedTouches[0].clientX : e.clientX;
+        const diff = x - startX;
+        if (Math.abs(diff) > 60) {
+          goTo(diff < 0 ? currentIndex + 1 : currentIndex - 1);
+        } else {
+          goTo(currentIndex); // snap back
+        }
+      }
+
+      viewport.addEventListener('mousedown',  onPointerDown);
+      viewport.addEventListener('mousemove',  onPointerMove);
+      viewport.addEventListener('mouseup',    onPointerUp);
+      viewport.addEventListener('mouseleave', onPointerUp);
+      viewport.addEventListener('touchstart', onPointerDown, { passive: true });
+      viewport.addEventListener('touchmove',  onPointerMove, { passive: true });
+      viewport.addEventListener('touchend',   onPointerUp);
+
+      // Keyboard navigation
+      document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight') goTo(currentIndex + 1);
+        if (e.key === 'ArrowLeft')  goTo(currentIndex - 1);
+      });
+
+      // Rebuild on resize
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          buildDots();
+          goTo(currentIndex);
+        }, 200);
+      });
+
+      // Init
+      buildDots();
+      goTo(0);
+    })();
+  </script>
+
+</body>
+</html>
