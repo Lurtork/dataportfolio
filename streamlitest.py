@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import sqlalchemy as sqlalchemy
 from sqlalchemy import create_engine
 
 # Credenciales de Alwaysdata
