@@ -10,7 +10,7 @@ puerto = "3306"
 base_datos = "lurtork_portfolio"
 
 # Crear motor de conexión
-engine = create_engine(f"mysql+mysqldb://{usuario}:{contraseña}@{host}:{puerto}/{base_datos}")
+engine = create_engine(f"mysql+pmysqldb://{usuario}:{contraseña}@{host}:{puerto}/{base_datos}")
 
 # Cargar datos desde la tabla
 @st.cache_data

@@ -1,5 +1,5 @@
 streamlit
-mysqlclient
+pymysql
 sqlalchemy
 pandas
 numpy
